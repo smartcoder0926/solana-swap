@@ -3,8 +3,7 @@ import { deepPurple, pink } from '@material-ui/core/colors';
 import 'antd/dist/antd.dark.less';
 import { SnackbarProvider } from 'notistack';
 import React, { FC } from 'react';
-import './App.css';
-import { Dapp } from './Dapp';
+import { Dapp } from './pages/Dapp';
 
 const theme = createTheme({
     palette: {

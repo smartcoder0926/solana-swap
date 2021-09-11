@@ -18,7 +18,7 @@ import { WalletAdapterNetwork, WalletError } from '@solana/wallet-adapter-base';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import { clusterApiUrl } from '@solana/web3.js';
 import { useSnackbar } from 'notistack';
-import { FC, useCallback, useMemo } from 'react';
+import { FC, useCallback, useMemo, useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Grid from '@material-ui/core/Grid';
@@ -29,9 +29,9 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import TextField from '@material-ui/core/TextField';
 import CardMedia from '@material-ui/core/CardMedia';
-import SendTransaction from './SendTransaction';
-import solImage from './sol.png';
-import usdcImage from './usdc.png';
+import SendTransaction from '../components/SendTransaction';
+import solImage from '../assets/sol.png';
+import usdcImage from '../assets/usdc.png';
 
 const useStyles = makeStyles({
     appBar: {
@@ -84,7 +84,9 @@ const useStyles = makeStyles({
 
 export const Dapp: FC = () => {
     const classes = useStyles();
-    const network = WalletAdapterNetwork.Devnet;
+    const [fromAmount, setFromAmount] = useState(0);
+    const [toAmount, setToAmount] = useState(0);
+    const network = WalletAdapterNetwork.Mainnet;
     const endpoint = useMemo(() => clusterApiUrl(network), [network]);
     const wallets = useMemo(
         () => [
@@ -154,10 +156,13 @@ export const Dapp: FC = () => {
                                         id="From-basic"
                                         size="medium"
                                         label="From"
+                                        type="number"
                                         variant="standard"
                                         InputLabelProps={{
                                             shrink: true,
                                         }}
+                                        value={fromAmount}
+                                        onChange={(e: any) => setFromAmount(e.target.value)}
                                     />
                                     <Grid className={classes.gridc}>
                                         <Typography style={{ marginRight: 10, fontSize: 14 }}>SOL</Typography>
@@ -169,11 +174,14 @@ export const Dapp: FC = () => {
                                         className={classes.input}
                                         id="To-basic"
                                         size="medium"
+                                        type="number"
                                         label="To"
                                         variant="standard"
                                         InputLabelProps={{
                                             shrink: true,
                                         }}
+                                        value={toAmount}
+                                        onChange={(e: any) => setToAmount(e.target.value)}
                                     />
                                     <Grid className={classes.gridc}>
                                         <Typography style={{ marginRight: 10, fontSize: 14 }}>USDC</Typography>
@@ -182,7 +190,7 @@ export const Dapp: FC = () => {
                                 </Grid>
                             </CardContent>
                             <CardActions>
-                                <SendTransaction />
+                                <SendTransaction fromAmount={fromAmount} toAmount={toAmount} />
                             </CardActions>
                         </Card>
                     </Grid>
