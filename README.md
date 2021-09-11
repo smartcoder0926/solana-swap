@@ -1,4 +1,4 @@
-# `@solana/wallet-adapter-example`
+# `solana/swap`
 
 <!-- @TODO -->
 
