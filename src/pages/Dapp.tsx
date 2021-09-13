@@ -30,6 +30,7 @@ import CardContent from '@material-ui/core/CardContent';
 import TextField from '@material-ui/core/TextField';
 import CardMedia from '@material-ui/core/CardMedia';
 import SendTransaction from '../components/SendTransaction';
+import SerumSendTransaction from '../components/SerumSendTransaction';
 import solImage from '../assets/sol.png';
 import usdcImage from '../assets/usdc.png';
 
@@ -191,6 +192,7 @@ export const Dapp: FC = () => {
                             </CardContent>
                             <CardActions>
                                 <SendTransaction fromAmount={fromAmount} toAmount={toAmount} />
+                                <SerumSendTransaction fromAmount={fromAmount} toAmount={toAmount} />
                             </CardActions>
                         </Card>
                     </Grid>

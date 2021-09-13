@@ -292,7 +292,9 @@ export async function swap(
   }
 
   const amountIn = new TokenAmount(aIn, from.decimals, false)
+  console.log(`amountIn`, amountIn, from.decimals)
   const amountOut = new TokenAmount(aOut, to.decimals, false)
+  console.log(`amountOut`, amountOut, to.decimals)
 
   let fromMint = fromCoinMint
   let toMint = toCoinMint

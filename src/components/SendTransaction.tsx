@@ -42,7 +42,7 @@ const SendTransaction = ({ fromAmount, toAmount }: FormState) => {
             poolInfo,
             "11111111111111111111111111111111",
             "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-            "2bTvSbhuYGBcDQnZG2aTMCdx9vLDE9L3G7WvMs5RJ1nb",
+            String(wallet.publicKey),
             "C4rHPCx82xxtVpGKN4bzT9bTta3axKxKYjX6gHNCsXgW",
             String(fromAmount),
             String(toAmount)
@@ -69,7 +69,7 @@ const SendTransaction = ({ fromAmount, toAmount }: FormState) => {
             disabled={!wallet.publicKey}
             className={classes.swapbutton}
         >
-            Swap
+            Swap(raydium)
         </Button>
     );
 };
