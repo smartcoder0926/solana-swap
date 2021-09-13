@@ -5,50 +5,45 @@ import { TokenAmount } from '../utils/safe-math'
 import { findAssociatedTokenAddress } from '../utils/web3'
 
 export const getTokenAccounts = async (conn: any, wallet: any) => {
-  if (wallet && wallet.connected) {
-    return conn.getParsedTokenAccountsByOwner(
-      wallet.publicKey,
-      {
-        programId: TOKEN_PROGRAM_ID
-      },
-      'confirmed'
-    )
-      .then(async (parsedTokenAccounts: any) => {
-        const tokenAccounts: any = {}
-        const auxiliaryTokenAccounts: Array<{ pubkey: PublicKey; account: AccountInfo<ParsedAccountData> }> = []
+  return conn.getParsedTokenAccountsByOwner(
+    wallet.publicKey,
+    {
+      programId: TOKEN_PROGRAM_ID
+    },
+    'confirmed'
+  )
+    .then(async (parsedTokenAccounts: any) => {
+      const tokenAccounts: any = {}
+      const auxiliaryTokenAccounts: Array<{ pubkey: PublicKey; account: AccountInfo<ParsedAccountData> }> = []
 
-        for (const tokenAccountInfo of parsedTokenAccounts.value) {
-          const tokenAccountPubkey = tokenAccountInfo.pubkey
-          const tokenAccountAddress = tokenAccountPubkey.toBase58()
-          const parsedInfo = tokenAccountInfo.account.data.parsed.info
-          const mintAddress = parsedInfo.mint
-          const balance = new TokenAmount(parsedInfo.tokenAmount.amount, parsedInfo.tokenAmount.decimals)
+      for (const tokenAccountInfo of parsedTokenAccounts.value) {
+        const tokenAccountPubkey = tokenAccountInfo.pubkey
+        const tokenAccountAddress = tokenAccountPubkey.toBase58()
+        const parsedInfo = tokenAccountInfo.account.data.parsed.info
+        const mintAddress = parsedInfo.mint
+        const balance = new TokenAmount(parsedInfo.tokenAmount.amount, parsedInfo.tokenAmount.decimals)
 
-          const ata = await findAssociatedTokenAddress(wallet.publicKey, new PublicKey(mintAddress))
+        const ata = await findAssociatedTokenAddress(wallet.publicKey, new PublicKey(mintAddress))
 
-          if (ata.equals(tokenAccountPubkey)) {
-            tokenAccounts[mintAddress] = {
-              tokenAccountAddress,
-              balance
-            }
-          } else if (parsedInfo.tokenAmount.uiAmount > 0) {
-            auxiliaryTokenAccounts.push(tokenAccountInfo)
+        if (ata.equals(tokenAccountPubkey)) {
+          tokenAccounts[mintAddress] = {
+            tokenAccountAddress,
+            balance
           }
+        } else if (parsedInfo.tokenAmount.uiAmount > 0) {
+          auxiliaryTokenAccounts.push(tokenAccountInfo)
         }
+      }
 
-        const solBalance = await conn.getBalance(wallet.publicKey, 'confirmed')
-        tokenAccounts[NATIVE_SOL.mintAddress] = {
-          tokenAccountAddress: wallet.publicKey.toBase58(),
-          balance: new TokenAmount(solBalance, NATIVE_SOL.decimals)
-        }
-        console.log(`tokenAccounts`, tokenAccounts)
-        return tokenAccounts
-      })
-      .catch()
-      .finally(() => {
-        console.log('done')
-      })
-  } else {
-
-  }
+      const solBalance = await conn.getBalance(wallet.publicKey, 'confirmed')
+      tokenAccounts[NATIVE_SOL.mintAddress] = {
+        tokenAccountAddress: wallet.publicKey.toBase58(),
+        balance: new TokenAmount(solBalance, NATIVE_SOL.decimals)
+      }
+      console.log(`tokenAccounts`, tokenAccounts)
+      return tokenAccounts
+    })
+    .catch(() => {
+      return {}
+    })
 }

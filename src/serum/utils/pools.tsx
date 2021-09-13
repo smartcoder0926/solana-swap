@@ -350,7 +350,6 @@ export const swap = async (
     amountIn + accountRentExempt,
     signers
   );
-console.log(`amountIn + accountRentExempt`, amountIn + accountRentExempt)
   let toAccount = findOrCreateAccountByMint(
     wallet.publicKey,
     wallet.publicKey,
@@ -416,7 +415,7 @@ console.log(`amountIn + accountRentExempt`, amountIn + accountRentExempt)
     instructions.concat(cleanupInstructions),
     signers
   );
-    console.log(`tx`, tx)
+  console.log(`tx`, tx)
   notify({
     message: "Trade executed.",
     type: "success",

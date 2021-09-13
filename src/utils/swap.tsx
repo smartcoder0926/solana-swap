@@ -71,13 +71,13 @@ export function getSwapOutAmount(
     const outBalance = pc.balance.wei.minus(amountOut)
     const beforePrice = new TokenAmount(
       parseFloat(new TokenAmount(pc.balance.wei, pc.decimals).fixed()) /
-        parseFloat(new TokenAmount(coin.balance.wei, coin.decimals).fixed()),
+      parseFloat(new TokenAmount(coin.balance.wei, coin.decimals).fixed()),
       pc.decimals,
       false
     )
     const afterPrice = new TokenAmount(
       parseFloat(new TokenAmount(outBalance, pc.decimals).fixed()) /
-        parseFloat(new TokenAmount(denominator, coin.decimals).fixed()),
+      parseFloat(new TokenAmount(denominator, coin.decimals).fixed()),
       pc.decimals,
       false
     )
@@ -105,13 +105,13 @@ export function getSwapOutAmount(
 
     const beforePrice = new TokenAmount(
       parseFloat(new TokenAmount(pc.balance.wei, pc.decimals).fixed()) /
-        parseFloat(new TokenAmount(coin.balance.wei, coin.decimals).fixed()),
+      parseFloat(new TokenAmount(coin.balance.wei, coin.decimals).fixed()),
       pc.decimals,
       false
     )
     const afterPrice = new TokenAmount(
       parseFloat(new TokenAmount(denominator, pc.decimals).fixed()) /
-        parseFloat(new TokenAmount(outBalance, coin.decimals).fixed()),
+      parseFloat(new TokenAmount(outBalance, coin.decimals).fixed()),
       pc.decimals,
       false
     )
@@ -292,9 +292,7 @@ export async function swap(
   }
 
   const amountIn = new TokenAmount(aIn, from.decimals, false)
-  console.log(`amountIn`, amountIn, from.decimals)
   const amountOut = new TokenAmount(aOut, to.decimals, false)
-  console.log(`amountOut`, amountOut, to.decimals)
 
   let fromMint = fromCoinMint
   let toMint = toCoinMint

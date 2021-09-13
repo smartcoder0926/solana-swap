@@ -1,12 +1,15 @@
 import { Button } from '@material-ui/core';
 import { get } from 'lodash'
-import { useConnection, useWallet } from '@solana/wallet-adapter-react';
+import { useConnection } from '@solana/wallet-adapter-react';
 import { makeStyles } from '@material-ui/core/styles';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useNotify } from '../hooks/notify';
 import { actions } from '../store/liquidity';
 import { swap } from '../utils/swap'
 import { getTokenAccounts } from '../store/wallet';
+import { useWallet } from '../serum/context/wallet';
+import { Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const useStyles = makeStyles({
     swapbutton: {
@@ -20,10 +23,13 @@ type FormState = {
     toAmount: Number
 }
 
+const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
+
 const SendTransaction = ({ fromAmount, toAmount }: FormState) => {
     const classes = useStyles();
     const { connection } = useConnection();
-    const wallet = useWallet();
+    const [loading, setLoading] = useState(false)
+    const { wallet, connected } = useWallet();
     const notify = useNotify();
 
     const onClick = useCallback(async () => {
@@ -35,14 +41,15 @@ const SendTransaction = ({ fromAmount, toAmount }: FormState) => {
             notify('error', 'Amount error!');
             return;
         }
+        setLoading(true)
         const liquidity = await actions(connection)
-        const poolInfo = Object.values(liquidity).find((e: any) => e.ammId === "58oQChx4yWmvKdwLLZzBi4ChoCc2fqCUWBkwMihLYQo2")
         const tokenAccounts = await getTokenAccounts(connection, wallet)
+        const poolInfo = Object.values(liquidity).find((e: any) => e.ammId === "58oQChx4yWmvKdwLLZzBi4ChoCc2fqCUWBkwMihLYQo2")
         const fromCoinmintAddress = "11111111111111111111111111111111"
         const toCoinmintAddress = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
         swap(
             connection,
-            wallet.adapter,
+            wallet,
             poolInfo,
             fromCoinmintAddress,
             toCoinmintAddress,
@@ -50,17 +57,16 @@ const SendTransaction = ({ fromAmount, toAmount }: FormState) => {
             get(tokenAccounts, `${toCoinmintAddress}.tokenAccountAddress`),
             String(fromAmount),
             String(toAmount)
-        )
-            .then((txid) => {
-                notify('info', 'Transaction has been sent');
-                notify('info', `https://explorer.solana.com/tx/${txid}`);
-            })
-            .catch((error) => {
-                console.log(`error`, error)
-            })
-            .finally(() => {
-                console.log(`finally`)
-            })
+        ).then((txid) => {
+            notify('info', 'Transaction has been sent');
+            notify('info', `https://explorer.solana.com/tx/${txid}`);
+        }).catch((error) => {
+            console.log(`error`, error)
+            setLoading(false)
+        }).finally(() => {
+            setLoading(false)
+            console.log(`finally`)
+        })
     }, [wallet, notify, connection]);
 
     return (
@@ -70,10 +76,10 @@ const SendTransaction = ({ fromAmount, toAmount }: FormState) => {
             size="large"
             fullWidth
             onClick={onClick}
-            disabled={!wallet.publicKey}
+            disabled={!connected || loading}
             className={classes.swapbutton}
         >
-            Swap(raydium)
+            {loading ? <Spin indicator={antIcon} className="add-spinner" /> : "Swap(Raydium)"}
         </Button>
     );
 };

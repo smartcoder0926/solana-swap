@@ -24,7 +24,6 @@ export const actions = async (conn: any) => {
     publicKey: PublicKey
     accountInfo: AccountInfo<Buffer>
   }[] = []
-  console.log(conn)
   await Promise.all([
     await (async () => {
       ammAll = await getFilteredProgramAccountsAmmOrMarketCache(

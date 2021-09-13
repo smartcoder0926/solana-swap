@@ -33,6 +33,8 @@ import SendTransaction from '../components/SendTransaction';
 import SerumSendTransaction from '../components/SerumSendTransaction';
 import solImage from '../assets/sol.png';
 import usdcImage from '../assets/usdc.png';
+import { useWallet } from '../serum/context/wallet';
+import { Button } from '@material-ui/core';
 
 const useStyles = makeStyles({
     appBar: {
@@ -89,6 +91,7 @@ export const Dapp: FC = () => {
     const [toAmount, setToAmount] = useState(0);
     const network = WalletAdapterNetwork.Mainnet;
     const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+    const { wallet, connect, disconnect, connected } = useWallet();
     const wallets = useMemo(
         () => [
             getPhantomWallet(),
@@ -137,7 +140,16 @@ export const Dapp: FC = () => {
                                     </Typography>
                                 </Grid>
                                 <Grid item>
-                                    <WalletMultiButton />
+                                    <Button
+                                        variant="outlined"
+                                        color="secondary"
+                                        size="large"
+                                        fullWidth
+                                        onClick={connected ? disconnect : connect}
+                                        className={classes.swapbutton}
+                                    >
+                                        {connected ? "disconnect" : "connect"}
+                                    </Button>
                                 </Grid>
                             </Grid>
                         </Toolbar>
