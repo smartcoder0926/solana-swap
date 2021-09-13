@@ -1,10 +1,12 @@
 import { Button } from '@material-ui/core';
+import { get } from 'lodash'
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { makeStyles } from '@material-ui/core/styles';
 import React, { useCallback } from 'react';
 import { useNotify } from '../hooks/notify';
 import { actions } from '../store/liquidity';
 import { swap } from '../utils/swap'
+import { getTokenAccounts } from '../store/wallet';
 
 const useStyles = makeStyles({
     swapbutton: {
@@ -35,15 +37,17 @@ const SendTransaction = ({ fromAmount, toAmount }: FormState) => {
         }
         const liquidity = await actions(connection)
         const poolInfo = Object.values(liquidity).find((e: any) => e.ammId === "58oQChx4yWmvKdwLLZzBi4ChoCc2fqCUWBkwMihLYQo2")
-        console.log(fromAmount, toAmount)
+        const tokenAccounts = await getTokenAccounts(connection, wallet)
+        const fromCoinmintAddress = "11111111111111111111111111111111"
+        const toCoinmintAddress = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
         swap(
             connection,
             wallet.adapter,
             poolInfo,
-            "11111111111111111111111111111111",
-            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-            String(wallet.publicKey),
-            "C4rHPCx82xxtVpGKN4bzT9bTta3axKxKYjX6gHNCsXgW",
+            fromCoinmintAddress,
+            toCoinmintAddress,
+            get(tokenAccounts, `${fromCoinmintAddress}.tokenAccountAddress`),
+            get(tokenAccounts, `${toCoinmintAddress}.tokenAccountAddress`),
             String(fromAmount),
             String(toAmount)
         )
