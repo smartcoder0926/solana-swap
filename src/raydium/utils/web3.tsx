@@ -381,8 +381,6 @@ export async function sendTransaction(
     return await wallet.signAndSendTransaction(programWalletTransaction)
   } else {
     const signedTransaction = await signTransaction(connection, wallet, transaction, signers)
-    console.log(`signedTransaction`, signedTransaction)
-    console.log(`connection`, connection)
     return await sendSignedTransaction(connection, signedTransaction)
   }
 }

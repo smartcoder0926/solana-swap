@@ -4,9 +4,9 @@ import { useConnection } from '@solana/wallet-adapter-react';
 import { makeStyles } from '@material-ui/core/styles';
 import React, { useCallback, useState } from 'react';
 import { useNotify } from '../hooks/notify';
-import { actions } from '../store/liquidity';
-import { swap } from '../utils/swap'
-import { getTokenAccounts } from '../store/wallet';
+import { actions } from '../raydium/store/liquidity';
+import { swap } from '../raydium/utils/swap'
+import { getTokenAccounts } from '../raydium/store/wallet';
 import { useWallet } from '../serum/context/wallet';
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";

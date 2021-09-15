@@ -282,7 +282,7 @@ export async function swap(
 ) {
   const transaction = new Transaction()
   const signers: Account[] = []
-
+  console.log(`signers`, signers)
   const owner = wallet.publicKey
 
   const from = getTokenByMintAddress(fromCoinMint)
@@ -381,7 +381,6 @@ export async function swap(
       })
     )
   }
-
   return await sendTransaction(connection, wallet, transaction, signers)
 }
 

@@ -13,7 +13,7 @@ import {
     getTorusWallet,
 } from '@solana/wallet-adapter-wallets';
 
-import { WalletDialogProvider, WalletMultiButton } from '@solana/wallet-adapter-material-ui';
+import { WalletDialogProvider } from '@solana/wallet-adapter-material-ui';
 import { WalletAdapterNetwork, WalletError } from '@solana/wallet-adapter-base';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import { clusterApiUrl } from '@solana/web3.js';
@@ -31,6 +31,7 @@ import TextField from '@material-ui/core/TextField';
 import CardMedia from '@material-ui/core/CardMedia';
 import SendTransaction from '../components/SendTransaction';
 import SerumSendTransaction from '../components/SerumSendTransaction';
+import OrcaSendTransaction from '../components/OrcaSendTransaction';
 import solImage from '../assets/sol.png';
 import usdcImage from '../assets/usdc.png';
 import { useWallet } from '../serum/context/wallet';
@@ -91,7 +92,7 @@ export const Dapp: FC = () => {
     const [toAmount, setToAmount] = useState(0);
     const network = WalletAdapterNetwork.Mainnet;
     const endpoint = useMemo(() => clusterApiUrl(network), [network]);
-    const { wallet, connect, disconnect, connected } = useWallet();
+    const { connect, disconnect, connected } = useWallet();
     const wallets = useMemo(
         () => [
             getPhantomWallet(),
@@ -122,7 +123,6 @@ export const Dapp: FC = () => {
         },
         [enqueueSnackbar]
     );
-
     return (
         <ConnectionProvider endpoint={endpoint}>
             <WalletProvider wallets={wallets} onError={onError}>
@@ -205,6 +205,7 @@ export const Dapp: FC = () => {
                             <CardActions>
                                 <SendTransaction fromAmount={fromAmount} toAmount={toAmount} />
                                 <SerumSendTransaction fromAmount={fromAmount} toAmount={toAmount} />
+                                <OrcaSendTransaction fromAmount={fromAmount} toAmount={toAmount} />
                             </CardActions>
                         </Card>
                     </Grid>
