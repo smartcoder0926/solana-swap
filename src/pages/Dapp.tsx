@@ -124,7 +124,7 @@ export const Dapp: FC = () => {
         [enqueueSnackbar]
     );
     return (
-        <ConnectionProvider endpoint={endpoint}>
+        <ConnectionProvider endpoint={"https://orca.rpcpool.com"}>
             <WalletProvider wallets={wallets} onError={onError}>
                 <WalletDialogProvider>
                     <AppBar position="relative" color="secondary" className={classes.appBar}>
