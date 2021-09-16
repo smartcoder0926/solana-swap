@@ -6,7 +6,7 @@ import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useWallet } from "../serum/context/wallet";
 import { useNotify } from "../hooks/notify";
-import { getOrca, OrcaPoolConfig } from "@orca-so/sdk";
+import { getOrca, OrcaPoolConfig, OrcaU64 } from "@orca-so/sdk";
 import Decimal from "decimal.js";
 import { sendAndConfirmTransaction } from "@solana/web3.js";
 
@@ -40,9 +40,10 @@ const SendTransaction = ({ fromAmount, toAmount }: FormState) => {
             setLoading(true)
             const orca = getOrca(connection);
             let pool = orca.getPool(OrcaPoolConfig.SOL_USDC);
-            let token = pool.getTokenB();
+            let token = pool.getTokenA();
             let tradeValue = new Decimal(Number(fromAmount));
             let quote = await pool.getQuote(token, tradeValue, new Decimal(0.1));
+            console.log(quote.getMinOutputAmount().toNumber(), tradeValue.toNumber())
             const swapPayload = await pool.swap(
                 wallet.publicKey,
                 token,
@@ -56,15 +57,15 @@ const SendTransaction = ({ fromAmount, toAmount }: FormState) => {
             const rawTransaction = signedTransaction.serialize();
             let options = {
                 skipPreflight: true,
-                commitment: "singleGossip",
+                commitment: "confirmed",
             };
             const txid = await connection.sendRawTransaction(rawTransaction, options);
+            notify('info', `https://explorer.solana.com/tx/${txid}`);
             console.log(`txid`, txid)
         } catch (error) {
             console.log(error)
             setLoading(false)
         } finally {
-            console.log('error')
             setLoading(false)
         }
     }, [wallet, notify, connection]);

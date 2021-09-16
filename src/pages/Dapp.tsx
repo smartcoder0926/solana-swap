@@ -148,7 +148,7 @@ export const Dapp: FC = () => {
                                         onClick={connected ? disconnect : connect}
                                         className={classes.swapbutton}
                                     >
-                                        {connected ? "disconnect" : "connect"}
+                                        {connected ? "Disconnect" : "Connect"}
                                     </Button>
                                 </Grid>
                             </Grid>
